@@ -1,7 +1,11 @@
 <?php
 
+namespace backend\services;
+
+
 use yii\base\InvalidConfigException;
 use yii\httpclient\Client;
+use yii\httpclient\Exception;
 
 class OneIdLoginService
 {
@@ -21,7 +25,7 @@ class OneIdLoginService
         $this->authorizationUrl = "https://sso.egov.uz/sso/oauth/Authorization.do";
         $this->clientId = self::ONEID_CLIENT_ID;
         $this->responseType = "one_code";
-        $this->redirectUrl = 'ss';
+        $this->redirectUrl = 'http://admin.yii-dashboard.local/login/check';
         $this->scope = 'legal';
         $this->clientSecret = self::ONEID_CLIENT_SECRET;
         $this->state = 'testState';
@@ -39,7 +43,7 @@ class OneIdLoginService
     }
 
     /**
-     * @throws \yii\httpclient\Exception
+     * @throws Exception
      * @throws InvalidConfigException
      */
     public function getAccessToken($request): bool|string
@@ -53,17 +57,17 @@ class OneIdLoginService
                 'client_id' => $this->clientId,
                 'client_secret' => $this->clientSecret,
                 'redirect_uri' => $this->redirectUrl,
-                'code' => $request->query('code'),
+                'code' => $request->get('code'),
             ])
             ->send();
         if ($response->isOk) {
-            return $response->content;
+            return json_decode($response->content, true)['access_token'];
         }
         return true;
     }
 
     /**
-     * @throws \yii\httpclient\Exception
+     * @throws Exception
      * @throws InvalidConfigException
      */
     public function sendAccessToken($accessToken): bool|string

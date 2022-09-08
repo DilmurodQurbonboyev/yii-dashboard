@@ -27,7 +27,7 @@ $this->title = 'Login';
                             Aгар сиз шу пайтга қадар id.egov.uz ишлаётганига ишончингиз комил бўлса, илтимос,
                             қуйидаги ҳавола билан авторизациядан ўтинг <br><br>
 
-                            <a href="<?= Url::to('login/one-id') ?>" class="register_square">
+                            <a href="<?= Url::to(['login/one-id']) ?>" class="register_square">
                                 <?= Html::img('@web/img/oneId.png', [
                                     'alt' => 'oneId'
                                 ]) ?>

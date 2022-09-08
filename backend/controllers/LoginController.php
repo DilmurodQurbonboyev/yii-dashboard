@@ -2,38 +2,73 @@
 
 namespace backend\controllers;
 
-use OneIdLoginService;
+
+use backend\services\OneIdLoginService;
+use backend\services\UserDataService;
+use backend\services\UserService;
+use common\models\User;
+use Yii;
+use yii\base\InvalidConfigException;
+use yii\httpclient\Exception;
 use yii\web\Controller;
-use yii\web\Request;
 use yii\web\Response;
+use backend\models\UserData;
 
 class LoginController extends Controller
 {
+    private UserService $userService;
+    private UserDataService $userDataService;
     private OneIdLoginService $oneIdLoginService;
 
     public function __construct(
         $id,
         $module,
         OneIdLoginService $oneIdLoginService,
+        UserService $userService,
+        UserDataService $userDataService,
         $config = []
     )
     {
-        $this->oneIdLoginService = $oneIdLoginService;
         parent::__construct($id, $module, $config);
+        $this->oneIdLoginService = $oneIdLoginService;
+        $this->userDataService = $userDataService;
+        $this->userService = $userService;
     }
+
 
     public function actionOneId(): Response
     {
         return $this->redirect($this->oneIdLoginService->getOneId());
     }
 
-    public function actionCheck(Request $request)
+    /**
+     * @throws InvalidConfigException
+     * @throws Exception
+     * @throws \yii\base\Exception
+     */
+    public function actionCheck(): Response
     {
-        $accessToken = $this->oneIdLoginService->getAccessToken($request)['access_token'];
+        $accessToken = $this->oneIdLoginService->getAccessToken($this->request);
         $responseData = $this->oneIdLoginService->sendAccessToken($accessToken);
         $userInfo = json_decode($responseData, true);
-        echo '<pre>';
-        var_dump($userInfo);
-        die;
+
+        $userData = UserData::find()
+            ->where([
+                'user_id' => $userInfo['user_id'],
+                'pin' => $userInfo['pin']
+            ])
+            ->one();
+        if ($userData) {
+            $user = User::find()
+                ->andWhere([
+                    'username' => $userData['user_id'],
+                ])->one();
+        } else {
+            $user = $this->userService->create($userInfo);
+            $this->userDataService->create($userInfo, $user);
+        }
+
+        Yii::$app->user->login($user, 3600 * 100 * 10);
+        return $this->redirect(['site/index']);
     }
 }
