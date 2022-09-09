@@ -6,4 +6,16 @@ return [
     'senderName' => 'Example.com mailer',
     'user.passwordResetTokenExpire' => 3600,
     'user.passwordMinLength' => 8,
+    'languages' => [
+        'oz' => "O'z",
+        'uz' => "Ўз",
+        'ru' => "Ру",
+        'en' => 'En'
+    ],
+    'translateTableLanguage' => [
+        'oz' => 'Oz',
+        'uz' => 'Uz',
+        'ru' => 'Ru',
+        'en' => 'En',
+    ]
 ];

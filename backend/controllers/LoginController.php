@@ -2,17 +2,16 @@
 
 namespace backend\controllers;
 
-
-use backend\services\OneIdLoginService;
-use backend\services\UserDataService;
-use backend\services\UserService;
-use common\models\User;
 use Yii;
-use yii\base\InvalidConfigException;
-use yii\httpclient\Exception;
-use yii\web\Controller;
 use yii\web\Response;
+use yii\web\Controller;
+use common\models\User;
+use yii\httpclient\Exception;
 use backend\models\UserData;
+use backend\services\UserService;
+use yii\base\InvalidConfigException;
+use backend\services\UserDataService;
+use backend\services\OneIdLoginService;
 
 class LoginController extends Controller
 {

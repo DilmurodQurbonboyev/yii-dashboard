@@ -42,15 +42,6 @@ class m220907_124100_create_user_data_table extends Migration
             'user_data',
             'userid'
         );
-
-        $this->addForeignKey(
-            'fk-user-userid', // prefix-table_name-column_name
-            'user_data',
-            'userid',
-            'user',
-            'id',
-            'CASCADE'
-        );
     }
 
     /**
@@ -58,11 +49,6 @@ class m220907_124100_create_user_data_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey(
-            'fk-user_data-userid',
-            'user_data'
-        );
-
         $this->dropIndex(
             'idx-user_data-userid',
             'user_data'

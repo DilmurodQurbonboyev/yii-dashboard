@@ -8,7 +8,7 @@ $this->title = 'Login';
 <div class="login-box">
     <div class="d-flex pb-2">
         <?= Html::img('@web/img/uzinfocom.png', [
-            'alt' => 'uzinfocom',
+            'alt' => 'Uzinfocom',
             'width' => '100%'
         ]) ?>
     </div>
